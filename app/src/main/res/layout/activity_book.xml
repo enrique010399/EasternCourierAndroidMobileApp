@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Book"
+
+    android:background="@color/colorBackGroundCard">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cardView3"
+        android:layout_width="346dp"
+        android:layout_height="605dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorBackGround"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/receiverNameEditText"
+            android:layout_width="290dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="28dp"
+
+            android:layout_marginTop="30dp"
+            android:drawableLeft="@drawable/add_clients26dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorAccent"
+            android:ems="10"
+            android:hint="Receiver Name"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textColor="@color/colorSemiWhite"
+            android:textColorHint="@color/colorSemiWhite"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/getDropingPointLocation" />
+
+        <Button
+            android:id="@+id/getDropingPointLocation"
+            android:layout_width="178dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/book_btn"
+            android:drawableLeft="@drawable/ic_add_location_black_24dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorPrimary"
+            android:text="Location"
+
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="11sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/droppingPointEditText" />
+
+        <EditText
+            android:id="@+id/droppingPointEditText"
+            android:layout_width="289dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="28dp"
+
+            android:layout_marginTop="18dp"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorAccent"
+            android:ems="10"
+            android:hint="Dropping Point"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textColor="@color/colorSemiWhite"
+            android:textColorHint="@color/colorSemiWhite"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/senderLOcation" />
+
+        <EditText
+            android:id="@+id/senderLOcation"
+            android:layout_width="291dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="32dp"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:drawablePadding="1dp"
+
+            android:drawableTint="@color/colorAccent"
+            android:ems="10"
+            android:hint="Your Location"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textColor="@color/colorSemiWhite"
+            android:textColorHint="@color/colorSemiWhite"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/packageImage" />
+
+        <ImageView
+            android:id="@+id/packageImage"
+            android:layout_width="148dp"
+            android:layout_height="90dp"
+
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/shape"
+            android:src="@drawable/ic_image_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/uploadPackageImage"
+            android:layout_width="114dp"
+            android:layout_height="43dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="68dp"
+            android:background="@drawable/book_btn"
+            android:drawableLeft="@drawable/ic_file_upload_black_24dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorPrimary"
+            android:text="Upload"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/requestDescription"
+            android:layout_width="302dp"
+            android:layout_height="108dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorWhite"
+            android:drawableLeft="@drawable/ic_description_black_24dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorPrimary"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:paddingLeft="20dp"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/receiverNameEditText" />
+
+        <Button
+            android:id="@+id/submitRequest"
+            android:layout_width="170dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="28dp"
+            android:layout_marginStart="160dp"
+            android:background="@drawable/signin_btn"
+            android:drawableLeft="@drawable/ic_check_black_24dp"
+            android:drawableTint="@color/colorWhite"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Send Request"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

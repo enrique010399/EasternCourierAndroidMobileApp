@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EasternCourier</string>
+    <string name="title_activity_current_route">Map</string>
+    <string name="title_activity_admin_dashboard">admin_dashboard</string>
+    <string name="title_activity_client_request_map_location">Map</string>
+    <string name="title_activity_sender_map_location_prototype">Map</string>
+</resources>
