@@ -22,10 +22,9 @@ import java.util.ArrayList;
 
 public class courier_client_request extends AppCompatActivity implements Adapter_courier_client_request.OnItemClickListener{
     ArrayList<admin_request_item> list ;
-    ArrayList<requestId> listRequest;
-    DatabaseReference reference,reference1;
-    FirebaseAuth mAuth;
+    DatabaseReference reference;
     RecyclerView recyclerView;
+    String courierId;
 
     Adapter_courier_client_request adapter_courier_client_request;
 
@@ -38,7 +37,7 @@ public class courier_client_request extends AppCompatActivity implements Adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         list = new ArrayList<admin_request_item>();
-        listRequest=new ArrayList<requestId>();
+
 
         //mAuth.getCurrentUser().getUid();
 
@@ -54,11 +53,11 @@ public class courier_client_request extends AppCompatActivity implements Adapter
 
                 //admin_request_item admin_request_item2=new admin_request_item();
                 for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    requestId requestId1=dataSnapshot1.getValue(requestId.class);
-                    admin_request_item admin_request_item2= dataSnapshot1.getValue(admin_request_item.class);
+
                     //Toast.makeText(courier_client_request.this,admin_request_item2.getRequestId(),Toast.LENGTH_LONG);
                     if (dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierUserName().equals(getIntent().getExtras().getString("Courier UserName"))){
                         admin_request_item admin_request_item1= dataSnapshot1.getValue(admin_request_item.class);
+                        courierId=dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierId().toString();
                         list.add(admin_request_item1);
                     }
 
@@ -83,7 +82,7 @@ public class courier_client_request extends AppCompatActivity implements Adapter
     public void onItemClick(int position) {
         Intent intent=new Intent(courier_client_request.this,admin_request_details.class);
         admin_request_item admin_request_item1=  list.get(position);
-
+        intent.putExtra("fromCourier","YES");
         intent.putExtra("Request Id",admin_request_item1.getRequestId());
         intent.putExtra("Sender Name",admin_request_item1.getClientFullName());
         intent.putExtra("Receiver Name",admin_request_item1.getReceiverName());
@@ -91,7 +90,7 @@ public class courier_client_request extends AppCompatActivity implements Adapter
         intent.putExtra("Package Description",admin_request_item1.getRequestDescription());
         intent.putExtra("Sender Latitude",admin_request_item1.getSenderLocationLatitude());
         intent.putExtra("Sender Longitude",admin_request_item1.getSenderLocationLongitude());
-
+        intent.putExtra("Courier Id",courierId);
         startActivity(intent);
 
 

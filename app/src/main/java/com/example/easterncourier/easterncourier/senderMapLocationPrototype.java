@@ -43,6 +43,8 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
         LatLng senderLocation = new LatLng(Double.parseDouble(getIntent().getExtras().getString("Latitude")),
                 Double.parseDouble(getIntent().getExtras().getString("Longitude")));
         mMap.addMarker(new MarkerOptions().position(senderLocation).title("Pick Up Point"));
+        mMap.setMaxZoomPreference(25.0f);
+        mMap.setMinZoomPreference(18.0f);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(senderLocation));
     }
 }

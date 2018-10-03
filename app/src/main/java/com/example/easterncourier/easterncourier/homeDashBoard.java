@@ -50,10 +50,16 @@ public class homeDashBoard extends AppCompatActivity implements View.OnClickList
             case R.id.cardViewBook: i=new Intent(this,Book.class);
             i.putExtra("username",clientUserName);
             i.putExtra("clientFullName",clientFullName);
-            startActivity(i);break;
+            startActivity(i);
+            break;
             case R.id.cardViewProfile: i=new Intent(this,Profile.class);startActivity(i);break;
-            case R.id.cardViewNotification: i=new Intent(this,Notification.class);startActivity(i);break;
-            case R.id.cardViewMessages: i=new Intent(this,Messages.class);startActivity(i);break;
+            case R.id.cardViewNotification: i=new Intent(this,Notification.class);
+                i.putExtra("Client UserName",clientUserName);
+            startActivity(i);break;
+            case R.id.cardViewMessages: i=new Intent(this,Messages.class);
+            i.putExtra("Client UserName",clientUserName);
+            startActivity(i);
+            break;
             case R.id.cardViewHistory: i=new Intent(this,History.class);startActivity(i);break;
             default:break;
 

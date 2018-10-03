@@ -54,7 +54,7 @@
         <activity android:name=".admin_accounts" />
         <activity android:name=".admin_messages" />
         <activity android:name=".transaction_history" />
-        <activity android:name="com.example.easterncourier.easterncourier.courier_Dashboard" />
+        <activity android:name=".courier_Dashboard" />
         <activity android:name=".courier_Clients" />
         <activity android:name=".courier_history" />
         <activity android:name=".register_client_account" />
@@ -62,14 +62,17 @@
         <activity
             android:name=".clientRequestMapLocation"
             android:label="@string/title_activity_client_request_map_location" />
-        <activity android:name="com.example.easterncourier.easterncourier.admin_request_details" />
+        <activity android:name=".admin_request_details" />
         <activity
             android:name=".senderMapLocationPrototype"
             android:label="@string/title_activity_sender_map_location_prototype" />
         <activity android:name=".addCourierAccount" />
-        <activity android:name=".courier_client_request"></activity>
-        <activity android:name="com.example.easterncourier.easterncourier.admin_choose_courier"></activity>
-
+        <activity android:name=".courier_client_request" />
+        <activity android:name=".admin_choose_courier" />
+        <activity android:name=".notificationAcceptedDetails" />
+        <activity
+            android:name=".courierLocation"
+            android:label="@string/title_activity_courier_location"></activity>
     </application>
 
 </manifest>

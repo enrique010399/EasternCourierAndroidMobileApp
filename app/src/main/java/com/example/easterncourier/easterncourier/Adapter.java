@@ -57,9 +57,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
         public myViewHolder(View itemView) {
             super(itemView);
 
-            notificationImage=itemView.findViewById(R.id.notificationImage);
-            notificationType=itemView.findViewById(R.id.notificationType);
-            notficationTime=itemView.findViewById(R.id.notificationTime);
+            //notificationImage=itemView.findViewById(R.id.notificationImage);
+            //notificationType=itemView.findViewById(R.id.notificationType);
+            //notficationTime=itemView.findViewById(R.id.notificationTime);
         }
     }
 }
