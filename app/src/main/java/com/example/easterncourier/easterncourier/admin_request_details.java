@@ -93,16 +93,6 @@ public class admin_request_details extends AppCompatActivity implements Location
 
 
 
-
-
-
-
-
-
-
-
-
-
             }
         });
 
@@ -139,6 +129,31 @@ public class admin_request_details extends AppCompatActivity implements Location
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
+
+            final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Courier Accounts").child(getIntent().getExtras().getString("Courier Id"));
+            databaseReference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+
+                            /*if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))){
+                                addCourierAccountItem addCourierAccountItem1=dataSnapshot1.getValue(addCourierAccountItem.class);
+
+
+                            }*/
+
+                        databaseReference1.child("courierLocationLatitude").setValue(tvLati);
+                        databaseReference1.child("courierLocationLongitude").setValue(tvLongi);
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -151,33 +166,10 @@ public class admin_request_details extends AppCompatActivity implements Location
     }
 
     @Override
-    public void onLocationChanged(final Location location) {
+    public void onLocationChanged( Location location) {
+        tvLongi = String.valueOf(location.getLongitude());
+        tvLati = String.valueOf(location.getLatitude());
 
-        final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Courier Accounts").child(getIntent().getExtras().getString("Courier Id"));
-        databaseReference1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-
-                            /*if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))){
-                                addCourierAccountItem addCourierAccountItem1=dataSnapshot1.getValue(addCourierAccountItem.class);
-
-
-                            }*/
-                    tvLongi = String.valueOf(location.getLongitude());
-                    tvLati = String.valueOf(location.getLatitude());
-                    databaseReference1.child("courierLocationLatitude").setValue(tvLati);
-                    databaseReference1.child("courierLocationLongitude").setValue(tvLongi);
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
