@@ -68,6 +68,8 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+
         DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Courier Accounts");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -82,6 +84,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                         mMap.setMaxZoomPreference(30.0f);
                         mMap.setMinZoomPreference(18.0f);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(courierLocation));
+
                     }
 
                 }
@@ -92,6 +95,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
             }
         });
+
 
 
 

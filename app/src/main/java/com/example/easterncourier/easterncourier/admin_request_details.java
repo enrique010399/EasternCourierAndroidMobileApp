@@ -1,16 +1,19 @@
 package com.example.easterncourier.easterncourier;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,23 +28,124 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class admin_request_details extends AppCompatActivity implements LocationListener {
+public class admin_request_details extends AppCompatActivity {
     TextView requestIdTv, senderNameTv, receiverNameTv, dateRequestedTv, packageDescriptiontv;
-    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn,assignCourierBtn,onTheWayBtn;
+    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn, assignCourierBtn, onTheWayBtn;
     String fromCourier;
     public static String tvLongi;
     public static String tvLati;
-    LocationManager locationManager;
     public static boolean isRunning;
+    LocationManager locationManager;
+    LocationListener locationListener;
+
+
+    TimerTask scanTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_request_details);
-        CheckPermission();
+        //CheckPermission();
+
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(final Location location) {
+
+                //tvLongi = String.valueOf(location.getLongitude());
+                //tvLati = String.valueOf(location.getLatitude());
+                Log.d("Location", location.toString());
+                try{
+                    final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Courier Accounts").child(getIntent().getExtras().getString("Courier Id"));
+                    databaseReference1.addValueEventListener(new ValueEventListener(){
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+
+
+                                databaseReference1.child("courierLocationLatitude").setValue(String.valueOf(location.getLatitude()));
+                                databaseReference1.child("courierLocationLongitude").setValue(String.valueOf(location.getLongitude()));
+
+                                //Toast.makeText(admin_request_details.this,tvLati,Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }catch(Exception e){
+                    Log.d("Location", e.getMessage().toString());
+                }
+
+
+
+                //getLocation();
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                Toast.makeText(admin_request_details.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                //Toast.makeText(this, "Enabled new provider!" + provider, Toast.LENGTH_SHORT).show();
+                Toast.makeText(admin_request_details.this, "Enable New Provider" + provider, Toast.LENGTH_SHORT).show();
+                ;
+            }
+        };
+        if (Build.VERSION.SDK_INT < 23) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+                return;
+            }
+
+        }
+        else{
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                return;
+            } else {
+
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+
+            }
+        }
+
+
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+
 
 
         requestIdTv=findViewById(R.id.requestIdTv);
@@ -57,12 +161,12 @@ public class admin_request_details extends AppCompatActivity implements Location
         assignCourierBtn=findViewById(R.id.assignCourierBtn);
         onTheWayBtn=findViewById(R.id.onTheWayBtn);
 
-        /*if (getIntent().getExtras().getString("fromCourier").equals("YES")){
-            assignCourierBtn.setVisibility(View.INVISIBLE);
-        }
-        else {
-            assignCourierBtn.setVisibility(View.VISIBLE);
-        }*/
+        //if (getIntent().getExtras().getString("fromCourier").equals("YES")){
+            //assignCourierBtn.setVisibility(View.INVISIBLE);
+        //}
+        //else {
+          //  assignCourierBtn.setVisibility(View.VISIBLE);
+        //}
 
 
 
@@ -82,15 +186,8 @@ public class admin_request_details extends AppCompatActivity implements Location
 
 
 
-                getLocation();
-
                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
                 databaseReference.child("requestFinish").setValue("On The Way");
-
-
-
-
-
 
 
             }
@@ -118,73 +215,27 @@ public class admin_request_details extends AppCompatActivity implements Location
         });
 
 
-
-
-
-
     }
 
-    public void getLocation() {
-        try {
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
+            if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    ==PackageManager.PERMISSION_GRANTED){
 
-            final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Courier Accounts").child(getIntent().getExtras().getString("Courier Id"));
-            databaseReference1.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-
-                            /*if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))){
-                                addCourierAccountItem addCourierAccountItem1=dataSnapshot1.getValue(addCourierAccountItem.class);
-
-
-                            }*/
-
-                        databaseReference1.child("courierLocationLatitude").setValue(tvLati);
-                        databaseReference1.child("courierLocationLongitude").setValue(tvLongi);
-
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } catch (SecurityException e) {
-            e.printStackTrace();
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
         }
     }
 
     public void CheckPermission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+
         }
     }
 
-    @Override
-    public void onLocationChanged( Location location) {
-        tvLongi = String.valueOf(location.getLongitude());
-        tvLati = String.valueOf(location.getLatitude());
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        Toast.makeText(admin_request_details.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(this, "Enabled new provider!" + provider,
-                Toast.LENGTH_SHORT).show();
-    }
 }

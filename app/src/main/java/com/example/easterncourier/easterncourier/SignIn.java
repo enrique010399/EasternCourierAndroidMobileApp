@@ -118,11 +118,11 @@ public class SignIn extends AppCompatActivity {
                         correct="Yes";
                         //addCourierAccountItem addCourierAccountItem1=new addCourierAccountItem();
 
-                        Toast.makeText(SignIn.this,"Yes", Toast.LENGTH_LONG).show();
+
                     }
                     else{
                         correct="No";
-                        Toast.makeText(SignIn.this,"No", Toast.LENGTH_LONG).show();
+
                     }
 
                 }

@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -40,9 +41,12 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
+
         LatLng senderLocation = new LatLng(Double.parseDouble(getIntent().getExtras().getString("Latitude")),
                 Double.parseDouble(getIntent().getExtras().getString("Longitude")));
-        mMap.addMarker(new MarkerOptions().position(senderLocation).title("Pick Up Point"));
+       mMap.addMarker(new MarkerOptions().position(senderLocation).title("Pick Up Point"));
+
+        //mMap.addCircle(new CircleOptions().center(senderLocation));
         mMap.setMaxZoomPreference(25.0f);
         mMap.setMinZoomPreference(18.0f);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(senderLocation));
