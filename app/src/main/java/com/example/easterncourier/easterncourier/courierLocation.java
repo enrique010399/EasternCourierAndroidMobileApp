@@ -1,5 +1,6 @@
 package com.example.easterncourier.easterncourier;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.nfc.Tag;
@@ -13,9 +14,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -78,11 +81,13 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
                     if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))){
                         addCourierAccountItem addCourierAccountItem1=dataSnapshot1.getValue(addCourierAccountItem.class);
-
+                        mMap.clear();
                         courierLocation= new LatLng(Double.parseDouble(addCourierAccountItem1.getCourierLocationLatitude().toString()),Double.parseDouble(addCourierAccountItem1.getCourierLocationLongitude().toString()) );
                         mMap.addMarker(new MarkerOptions().position(courierLocation).title("Courier Location"));
-                        mMap.setMaxZoomPreference(30.0f);
+                        mMap.addPolyline(new PolylineOptions().add(courierLocation).width(8f).color(Color.RED));
+                        mMap.setMaxZoomPreference(40.0f);
                         mMap.setMinZoomPreference(18.0f);
+                        mMap.addCircle(new CircleOptions().center(courierLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.RED).fillColor(Color.argb(70,150,50,50)));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(courierLocation));
 
                     }

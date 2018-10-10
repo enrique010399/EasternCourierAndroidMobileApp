@@ -117,8 +117,6 @@ public class SignIn extends AppCompatActivity {
                             .getText().toString()) && dataSnapshot1.getValue(addCourierAccountItem.class).getCourierPassword().equals(passwordTf.getText().toString())){
                         correct="Yes";
                         //addCourierAccountItem addCourierAccountItem1=new addCourierAccountItem();
-
-
                     }
                     else{
                         correct="No";
@@ -144,9 +142,9 @@ public class SignIn extends AppCompatActivity {
                     if (success){
                         accountFirstName= jsonResponse.getString("accountFirstName");
                         accountLastName= jsonResponse.getString("accountLastName");
-                            animateButtonWidth();
-                            fadeOutTextAndSetProgressDialog();
-                            nextAction();
+                        animateButtonWidth();
+                        fadeOutTextAndSetProgressDialog();
+                        nextAction();
                     }
 
                     else{
@@ -157,7 +155,6 @@ public class SignIn extends AppCompatActivity {
                         else if(correct.equals("Yes")){
                             Intent intentForCourier=new Intent(SignIn.this,courier_Dashboard.class);
                             EditText userNameTf=findViewById(R.id.usernameTf);
-
                             intentForCourier.putExtra("Courier UserName",userNameTf.getText().toString());
                             startActivity(intentForCourier);
                         }
