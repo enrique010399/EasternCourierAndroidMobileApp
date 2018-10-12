@@ -36,7 +36,7 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         reference= FirebaseDatabase.getInstance().getReference("");
-        //geoFire=new GeoFire()
+
     }
 
 
@@ -53,7 +53,6 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
         mMap.clear();
         Double latitude=Double.parseDouble(getIntent().getExtras().getString("Latitude"));
@@ -62,12 +61,10 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
                 Double.parseDouble(getIntent().getExtras().getString("Longitude")));
         mMap.addMarker(new MarkerOptions().position(senderLocation).title("Pick Up Point").icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-        //mMap.addCircle(new CircleOptions().center(senderLocation));
-       // mMap.addCircle(new CircleOptions().center(senderLocation).radius(500).strokeColor(Color.BLUE).fillColor(0x220000ff).strokeWidth(5.0f));
+
         mMap.setMaxZoomPreference(40.0f);
         mMap.setMinZoomPreference(18.0f);
         mMap.addCircle(new CircleOptions().center(senderLocation).radius(50.0).strokeWidth(3f).strokeColor(Color.RED).fillColor(Color.argb(70,150,50,50)));
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(senderLocation));
     }
 }

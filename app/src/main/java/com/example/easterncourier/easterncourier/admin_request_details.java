@@ -118,7 +118,7 @@ public class admin_request_details extends AppCompatActivity {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
                 return;
             }
         }
@@ -136,7 +136,7 @@ public class admin_request_details extends AppCompatActivity {
                 return;
             } else {
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 1, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
 
             }
         }
@@ -176,19 +176,11 @@ public class admin_request_details extends AppCompatActivity {
         dateRequestedTv.setText(getIntent().getExtras().getString("Date Requested"));
         packageDescriptiontv.setText(getIntent().getExtras().getString("Package Description"));
 
-
-
         onTheWayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
-
                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
                 databaseReference.child("requestFinish").setValue("On The Way");
-
-
             }
         });
 
@@ -199,7 +191,6 @@ public class admin_request_details extends AppCompatActivity {
                 Intent intent=new Intent(admin_request_details.this,senderMapLocationPrototype.class);
                 intent.putExtra("Longitude",getIntent().getExtras().getString("Sender Longitude"));
                 intent.putExtra("Latitude",getIntent().getExtras().getString("Sender Latitude"));
-
                 startActivity(intent);
             }
         });
@@ -220,11 +211,9 @@ public class admin_request_details extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
             if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
                     ==PackageManager.PERMISSION_GRANTED){
-
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
             }
         }
     }
@@ -232,9 +221,6 @@ public class admin_request_details extends AppCompatActivity {
     public void CheckPermission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-
-
         }
     }
-
 }

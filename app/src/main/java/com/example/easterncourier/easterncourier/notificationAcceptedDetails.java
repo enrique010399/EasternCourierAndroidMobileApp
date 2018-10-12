@@ -43,6 +43,8 @@ public class notificationAcceptedDetails extends AppCompatActivity {
                 //getIntent().getExtras().getString("Courier Location Latitude");
                 //getIntent().getExtras().getString("Courier Location Longitude");
                 intent.putExtra("Courier Id",courierId);
+                intent.putExtra("Sender Latitude",getIntent().getExtras().getString("Sender Latitude"));
+                intent.putExtra("Sender Longitude",getIntent().getExtras().getString("Sender Longitude"));
                 startActivity(intent);
             }
         });
