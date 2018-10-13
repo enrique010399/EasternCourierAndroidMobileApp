@@ -82,7 +82,17 @@ public class Book extends AppCompatActivity implements LocationListener {
         final EditText dropingPointLocation=findViewById(R.id.droppingPointEditText);
         final EditText receiverName=findViewById(R.id.receiverNameEditText);
         final EditText packageDescription=findViewById(R.id.requestDescription);
-        Button submitRequest=findViewById(R.id.submitRequest);
+        Button submitRequest=findViewById(R.id.submitRequest),
+        getDroppingPointLocation=findViewById(R.id.getDropingPointLocation);
+        getDroppingPointLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Book.this, chooseDroppingPointLocation.class);
+                intent.putExtra("clientLatitude",tvLati);
+                intent.putExtra("clientLongitude",tvLongi);
+                startActivity(intent);
+            }
+        });
 
         //FireBaseStorage
         mStorageRef= FirebaseStorage.getInstance().getReference("Client Request");

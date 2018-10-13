@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -68,8 +69,8 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
     DatabaseReference ref;
     GeofencingRequest geoRequest;
     GoogleApiClient client;
-    public static final String CHANNEL_1_ID="channel1";
-    public static final String CHANNEL_2_ID="channel2";
+    private NotificationManagerCompat notificationManager;
+
     private static final String TAG = "courierLocation";
 
     @Override
@@ -77,11 +78,14 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courier_location);
 
+        notificationManager=NotificationManagerCompat.from(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+    public void sendOnChannel1(View v){
     }
 
 
@@ -95,16 +99,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
      * installed Google Play services and returned to the app.
      */
 
-    private void createNotificationChannels(){
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel channel1=new NotificationChannel(CHANNEL_1_ID,"Channel 1", NotificationManager.IMPORTANCE_HIGH);
-            channel1.setDescription("Eastern Courier");
 
-            NotificationManager manager=getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel1);
-
-        }
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -131,26 +126,23 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                         //mMap.addPolyline(new PolylineOptions().add(courierLocation).width(8f).color(Color.BLUE));
                         mMap.setMaxZoomPreference(40.0f);
                         mMap.setMinZoomPreference(18.0f);
+
                         mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
                         if (distance(clientLocation.latitude,clientLocation.longitude,courierLocation.latitude,courierLocation.longitude)<0.0155343){
-                            /*Notification notification=new NotificationCompat.Builder(courierLocation.this,CHANNEL_1_ID)
+
+
+
+                            Notification notification=new NotificationCompat.Builder(courierLocation.this,App.CHANNEL_1_ID)
                                     .setSmallIcon(R.mipmap.ic_launcher_round)
                                     .setContentTitle("Eastern Courier")
-                                    .setContentText("The courier is within 25 meters away!!!!")
+                                    .setContentText("The courier is within 25 meters away")
                                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();*/
-
-                            android.support.v7.app.AlertDialog.Builder builder=new android.support.v7.app.AlertDialog.Builder(courierLocation.this);
-                            builder.setMessage("The Courier is within 25 meters away from your requested location")
-                                    .create().show();
-
-
+                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();
+                            notificationManager.notify(1,notification);
 
                         }
 
-                        /*Geofence geofence = createGeoFence(clientLocation, 0.025f);
-                        geoRequest = createGeoRequest(geofence);
-                        addGeofence(geofence);*/
+
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(courierLocation));
 
                     }
@@ -169,7 +161,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
     private double distance(double lat1, double lng1, double lat2, double lng2) {
 
-        double earthRadius = 3958.75; // in miles, change to 6371 for kilometer output
+        double earthRadius = 3958.75; //in kilometers=6371
 
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
@@ -184,45 +176,13 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
         double dist = earthRadius * c;
 
-        return dist; // output distance, in MILES
-    }
-
-    private void addGeofence(Geofence geofence) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.GeofencingApi.addGeofences(client, geoRequest, createGeofencingPendingIntent())
-                .setResultCallback(this);
-
-    }
-    PendingIntent geoFencePendingIntent;
-    private PendingIntent createGeofencingPendingIntent() {
-        if (geoFencePendingIntent!=null){
-            return geoFencePendingIntent;
-        }
-        Intent intent=new Intent(this,GeofenceTransitionService.class);
-        return PendingIntent.getService(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-    }
-
-    private GeofencingRequest createGeoRequest(Geofence geofence) {
-        return new GeofencingRequest.Builder()
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER).addGeofence(geofence).build();
+        return dist; // distance in  miles
     }
 
 
-    private Geofence createGeoFence(LatLng position, float v) {
-        return new Geofence.Builder()
-                .setRequestId("Client Location Geofence").setCircularRegion(position.latitude,position.longitude,v)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER| Geofence.GEOFENCE_TRANSITION_EXIT).build();
-    }
+
+
+
 
 
 
@@ -258,19 +218,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onResult(@NonNull Status status) {
-        drawGeofence();
-    }
-    Circle geoFenceLimits;
-    private void drawGeofence() {
-        Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));
-        Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
-        final LatLng clientLocation = new LatLng(clientLatitude, clientLongitude);
-        if (geoFenceLimits!=null){
-            geoFenceLimits.remove();
-        }
-        CircleOptions circleOptions=new CircleOptions().center(clientLocation).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255))
-                .radius(0.025f);
-        geoFenceLimits=mMap.addCircle(circleOptions);
 
     }
+
 }
