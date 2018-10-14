@@ -28,9 +28,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -62,7 +65,7 @@ public class Book extends AppCompatActivity implements LocationListener {
     public static String tvLongi;
     public static String tvLati;
 
-
+    int PLACE_PICKER_REQUEST=1;
     LocationManager locationManager;
     DatabaseReference databaseClientRequest;
 
@@ -87,12 +90,26 @@ public class Book extends AppCompatActivity implements LocationListener {
         getDroppingPointLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Book.this, chooseDroppingPointLocation.class);
+                /*Intent intent=new Intent(Book.this, chooseDroppingPointLocation.class);
                 intent.putExtra("clientLatitude",tvLati);
                 intent.putExtra("clientLongitude",tvLongi);
-                startActivity(intent);
+                startActivity(intent);*/
+
+                PlacePicker .IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    Intent  intent=builder.build(Book.this);
+                    startActivityForResult(intent,PLACE_PICKER_REQUEST);
+
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
+
+
 
         //FireBaseStorage
         mStorageRef= FirebaseStorage.getInstance().getReference("Client Request");
@@ -184,6 +201,14 @@ public class Book extends AppCompatActivity implements LocationListener {
             mImageUri =data.getData();
             Picasso.get().load(mImageUri).into(mImageView);
 
+        }
+
+        if (requestCode == PLACE_PICKER_REQUEST){
+            if (resultCode==RESULT_OK){
+                //Place place=PlacePicker.getPlace(data,this);
+                //String address=String.format("Place: ",place.getAddress());
+
+            }
         }
 
     }

@@ -39,10 +39,11 @@ public class chooseDroppingPointLocation extends FragmentActivity implements OnM
         mMap = googleMap;
 
 
-        // Add a marker in Sydney and move the camera
+
         LatLng client = new LatLng(-Double.parseDouble(getIntent().getExtras().getString("clientLatitude"))
                 , Double.parseDouble(getIntent().getExtras().getString("clientLongitude")));
         //mMap.addMarker(new MarkerOptions().position(client).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(client));
+
     }
 }
