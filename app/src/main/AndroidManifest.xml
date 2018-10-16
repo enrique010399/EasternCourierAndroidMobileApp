@@ -37,7 +37,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyAK7ScLLH-yunf718f3O8b74tKUWZbAG6w" />
 
         <activity android:name=".Book" />
         <activity android:name=".Profile" />
@@ -76,7 +76,10 @@
             android:label="@string/title_activity_courier_location" />
         <activity
             android:name=".chooseDroppingPointLocation"
-            android:label="@string/title_activity_choose_dropping_point_location"></activity>
+            android:label="@string/title_activity_choose_dropping_point_location" />
+        <activity
+            android:name=".receiverLocation"
+            android:label="@string/title_activity_receiver_location"></activity>
     </application>
 
 </manifest>

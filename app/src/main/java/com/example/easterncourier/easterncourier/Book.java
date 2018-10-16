@@ -34,6 +34,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -69,6 +70,10 @@ public class Book extends AppCompatActivity implements LocationListener {
     LocationManager locationManager;
     DatabaseReference databaseClientRequest;
 
+    String droppingPointLatitude,droppingPointLongitude;
+
+    LatLng latLng;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,9 @@ public class Book extends AppCompatActivity implements LocationListener {
                 startActivity(intent);*/
 
                 PlacePicker .IntentBuilder builder = new PlacePicker.IntentBuilder();
+
                 try {
+
                     Intent  intent=builder.build(Book.this);
                     startActivityForResult(intent,PLACE_PICKER_REQUEST);
 
@@ -135,12 +142,10 @@ public class Book extends AppCompatActivity implements LocationListener {
                     Date date = new Date();
                     System.out.println(formatter.format(date));
                     String id=databaseClientRequest.push().getKey();
-                    BookRequest bookRequest=new BookRequest(id,tvLati,tvLongi,"none","none",receiverName.getText().toString(),packageDescription.getText().toString(),getIntent().getExtras().getString("username"),
+                    BookRequest bookRequest=new BookRequest(id,tvLati,tvLongi,droppingPointLatitude,droppingPointLongitude,receiverName.getText().toString(),packageDescription.getText().toString(),getIntent().getExtras().getString("username"),
                             getIntent().getExtras().getString("clientFullName"), formatter.format(date)+"",mImageUri+"","Not Assign","Not Assign","Not Assign","Not Yet");
                     databaseClientRequest.child(id).setValue(bookRequest);
                     Toast.makeText(Book.this,"Request Sent",Toast.LENGTH_LONG).show();
-
-
 
                 }
                 else{
@@ -200,14 +205,19 @@ public class Book extends AppCompatActivity implements LocationListener {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
             mImageUri =data.getData();
             Picasso.get().load(mImageUri).into(mImageView);
-
         }
 
         if (requestCode == PLACE_PICKER_REQUEST){
+            EditText droppingPoint=findViewById(R.id.droppingPointEditText);
             if (resultCode==RESULT_OK){
-                //Place place=PlacePicker.getPlace(data,this);
-                //String address=String.format("Place: ",place.getAddress());
-
+                Place place=PlacePicker.getPlace(data,this);
+                String address=String.format("Place: ",place.getAddress());
+                place.getLatLng();
+                latLng=place.getLatLng();
+                droppingPointLatitude=String.valueOf(latLng.latitude);
+                droppingPointLongitude=String.valueOf(latLng.longitude);
+                //Toast.makeText(Book.this,String.format(place.getLatLng()),Toast.LENGTH_LONG);
+                droppingPoint.setText(place.getAddress().toString());
             }
         }
 
@@ -228,7 +238,6 @@ public class Book extends AppCompatActivity implements LocationListener {
     public void getLocation() {
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);
         } catch (SecurityException e) {
             e.printStackTrace();

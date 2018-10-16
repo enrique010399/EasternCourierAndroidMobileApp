@@ -195,6 +195,17 @@ public class admin_request_details extends AppCompatActivity {
             }
         });
 
+        viewreceiverLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(admin_request_details.this,receiverLocation.class);
+                intent.putExtra("receiverLatitude",getIntent().getExtras().getString("Receiver Latitude"));
+                intent.putExtra("receiverLongitude",getIntent().getExtras().getString("Receiver Longitude"));
+
+                startActivity(intent);
+            }
+        });
+
         assignCourierBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

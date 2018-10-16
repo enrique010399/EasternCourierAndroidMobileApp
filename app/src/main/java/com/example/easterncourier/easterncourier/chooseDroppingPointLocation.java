@@ -37,9 +37,6 @@ public class chooseDroppingPointLocation extends FragmentActivity implements OnM
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
-
         LatLng client = new LatLng(-Double.parseDouble(getIntent().getExtras().getString("clientLatitude"))
                 , Double.parseDouble(getIntent().getExtras().getString("clientLongitude")));
         //mMap.addMarker(new MarkerOptions().position(client).title("Marker in Sydney"));

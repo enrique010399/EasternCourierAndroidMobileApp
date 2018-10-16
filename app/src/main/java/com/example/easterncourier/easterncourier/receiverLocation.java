@@ -1,16 +1,11 @@
 package com.example.easterncourier.easterncourier;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,26 +15,19 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-public class senderMapLocationPrototype extends FragmentActivity implements OnMapReadyCallback {
+public class receiverLocation extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    GeoFire geoFire;
-    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sender_map_location_prototype);
+        setContentView(R.layout.receiver_location);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        reference= FirebaseDatabase.getInstance().getReference("");
-
     }
 
 
@@ -54,10 +42,8 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
-        //mMap.clear();
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
@@ -66,21 +52,19 @@ public class senderMapLocationPrototype extends FragmentActivity implements OnMa
                             this, R.raw.mapstyledarker));
 
             if (!success) {
-                Log.e("sender", "Style parsing failed.");
+                Log.e("receiver", "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e("sender", "Can't find style. Error: ", e);
+            Log.e("receiver", "Can't find style. Error: ", e);
         }
-        Double latitude=Double.parseDouble(getIntent().getExtras().getString("Latitude"));
-        Double longitude=Double.parseDouble(getIntent().getExtras().getString("Longitude"));
-        LatLng senderLocation = new LatLng(Double.parseDouble(getIntent().getExtras().getString("Latitude")),
-                Double.parseDouble(getIntent().getExtras().getString("Longitude")));
-        mMap.addMarker(new MarkerOptions().position(senderLocation).title("Pick Up Point").icon(BitmapDescriptorFactory
+        Double latitude=Double.parseDouble(getIntent().getExtras().getString("receiverLatitude"));
+        Double longitude=Double.parseDouble(getIntent().getExtras().getString("receiverLongitude"));
+        LatLng receiverLocation = new LatLng(latitude,longitude);
+        mMap.addMarker(new MarkerOptions().position(receiverLocation).title("Pick Up Point").icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-
         mMap.setMaxZoomPreference(40.0f);
         mMap.setMinZoomPreference(18.0f);
-        mMap.addCircle(new CircleOptions().center(senderLocation).radius(50.0).strokeWidth(3f).strokeColor(Color.RED).fillColor(Color.argb(70,150,50,50)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(senderLocation));
+        mMap.addCircle(new CircleOptions().center(receiverLocation).radius(50.0).strokeWidth(3f).strokeColor(Color.RED).fillColor(Color.argb(70,150,50,50)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(receiverLocation));
     }
 }

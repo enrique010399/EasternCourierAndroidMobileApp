@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -108,6 +110,21 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
         Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
         final LatLng clientLocation = new LatLng(clientLatitude, clientLongitude);
 
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.mapstyledarker));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
         //ref=FirebaseDatabase.getInstance().getReference("Courier Accounts").child("").child("");
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Courier Accounts");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -129,9 +146,6 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
                         mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
                         if (distance(clientLocation.latitude,clientLocation.longitude,courierLocation.latitude,courierLocation.longitude)<0.0155343){
-
-
-
                             Notification notification=new NotificationCompat.Builder(courierLocation.this,App.CHANNEL_1_ID)
                                     .setSmallIcon(R.mipmap.ic_launcher_round)
                                     .setContentTitle("Eastern Courier")
@@ -139,7 +153,6 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                                     .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();
                             notificationManager.notify(1,notification);
-
                         }
 
 
