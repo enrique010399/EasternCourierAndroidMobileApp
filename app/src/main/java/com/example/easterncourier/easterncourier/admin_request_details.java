@@ -65,14 +65,9 @@ public class admin_request_details extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-
-
                                 databaseReference1.child("courierLocationLatitude").setValue(String.valueOf(location.getLatitude()));
                                 databaseReference1.child("courierLocationLongitude").setValue(String.valueOf(location.getLongitude()));
-
                                 //Toast.makeText(admin_request_details.this,tvLati,Toast.LENGTH_SHORT).show();
-
-
                             }
                         }
 
@@ -201,7 +196,6 @@ public class admin_request_details extends AppCompatActivity {
                 Intent intent=new Intent(admin_request_details.this,receiverLocation.class);
                 intent.putExtra("receiverLatitude",getIntent().getExtras().getString("Receiver Latitude"));
                 intent.putExtra("receiverLongitude",getIntent().getExtras().getString("Receiver Longitude"));
-
                 startActivity(intent);
             }
         });
