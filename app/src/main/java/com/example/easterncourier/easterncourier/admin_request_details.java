@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,16 +33,16 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class admin_request_details extends AppCompatActivity {
+public class admin_request_details extends AppCompatActivity implements courier_enter_requestid_dialog.ExampleDialogListener {
     TextView requestIdTv, senderNameTv, receiverNameTv, dateRequestedTv, packageDescriptiontv;
-    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn, assignCourierBtn, onTheWayBtn;
+    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn, assignCourierBtn, onTheWayBtn,finishDeliveryBtn;
     String fromCourier;
     public static String tvLongi;
     public static String tvLati;
     public static boolean isRunning;
     LocationManager locationManager;
     LocationListener locationListener;
-
+    public static String finish;
 
     TimerTask scanTask;
 
@@ -51,11 +52,42 @@ public class admin_request_details extends AppCompatActivity {
         setContentView(R.layout.admin_request_details);
         //CheckPermission();
 
+
+
+        requestIdTv=findViewById(R.id.requestIdTv);
+        senderNameTv=findViewById(R.id.senderFullNameTv);
+        receiverNameTv=findViewById(R.id.receiverNameTv);
+        dateRequestedTv=findViewById(R.id.dateRequestedTv);
+        packageDescriptiontv=findViewById(R.id.packageDescTv);
+
+
+        viewPackageImageBtn=findViewById(R.id.nshowPackageImageBtn);
+        viewSenderLocationBtn=findViewById(R.id.showSenderLocationBtn);
+        viewreceiverLocationBtn=findViewById(R.id.showReceiverLocationBtn);
+        assignCourierBtn=findViewById(R.id.assignCourierBtn);
+        onTheWayBtn=findViewById(R.id.onTheWayBtn);
+        finishDeliveryBtn=findViewById(R.id.finishDeliveryBtn);
+
+        String ifCourier=getIntent().getExtras().getString("ifCourier");
+        if (ifCourier.equals("Courier")){
+            assignCourierBtn.setVisibility(View.INVISIBLE);
+
+
+        }
+        else if (ifCourier.equals("Admin")){
+            assignCourierBtn.setVisibility(View.VISIBLE);
+            onTheWayBtn.setVisibility(View.INVISIBLE);
+            finishDeliveryBtn.setVisibility(View.INVISIBLE);
+        }
+        else{
+            Toast.makeText(this,"Unknown account type",Toast.LENGTH_LONG);
+        }
+
+
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
-
                 //tvLongi = String.valueOf(location.getLongitude());
                 //tvLati = String.valueOf(location.getLatitude());
                 Log.d("Location", location.toString());
@@ -68,6 +100,7 @@ public class admin_request_details extends AppCompatActivity {
                                 databaseReference1.child("courierLocationLatitude").setValue(String.valueOf(location.getLatitude()));
                                 databaseReference1.child("courierLocationLongitude").setValue(String.valueOf(location.getLongitude()));
                                 //Toast.makeText(admin_request_details.this,tvLati,Toast.LENGTH_SHORT).show();
+
                             }
                         }
 
@@ -113,7 +146,7 @@ public class admin_request_details extends AppCompatActivity {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
                 return;
             }
         }
@@ -131,7 +164,7 @@ public class admin_request_details extends AppCompatActivity {
                 return;
             } else {
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
 
             }
         }
@@ -142,18 +175,7 @@ public class admin_request_details extends AppCompatActivity {
 
 
 
-        requestIdTv=findViewById(R.id.requestIdTv);
-        senderNameTv=findViewById(R.id.senderFullNameTv);
-        receiverNameTv=findViewById(R.id.receiverNameTv);
-        dateRequestedTv=findViewById(R.id.dateRequestedTv);
-        packageDescriptiontv=findViewById(R.id.packageDescTv);
 
-
-        viewPackageImageBtn=findViewById(R.id.nshowPackageImageBtn);
-        viewSenderLocationBtn=findViewById(R.id.showSenderLocationBtn);
-        viewreceiverLocationBtn=findViewById(R.id.showReceiverLocationBtn);
-        assignCourierBtn=findViewById(R.id.assignCourierBtn);
-        onTheWayBtn=findViewById(R.id.onTheWayBtn);
 
         //if (getIntent().getExtras().getString("fromCourier").equals("YES")){
             //assignCourierBtn.setVisibility(View.INVISIBLE);
@@ -170,6 +192,27 @@ public class admin_request_details extends AppCompatActivity {
         receiverNameTv.setText(getIntent().getExtras().getString("Receiver Name"));
         dateRequestedTv.setText(getIntent().getExtras().getString("Date Requested"));
         packageDescriptiontv.setText(getIntent().getExtras().getString("Package Description"));
+
+
+        finishDeliveryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                requestIdTv.setVisibility(View.INVISIBLE);
+                courier_enter_requestid_dialog courier_enter_requestid_dialog1=new courier_enter_requestid_dialog();
+                //courier_enter_requestid_dialog1.trueRequestId=requestIdTv.getText().toString();
+                courier_enter_requestid_dialog1.show(getSupportFragmentManager(),"Request Id");
+            }
+
+
+        });
+
+
+
+
+
+
+
 
         onTheWayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,12 +256,42 @@ public class admin_request_details extends AppCompatActivity {
     }
 
     @Override
+    public void applyTexts(String requestId) {
+        if (requestId.equals(requestIdTv.getText().toString())){
+            AlertDialog.Builder builder=new AlertDialog.Builder(admin_request_details.this);
+            builder.setMessage("The request Id is correct")
+                    .create().show();
+            final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
+            databaseReference1.addValueEventListener(new ValueEventListener(){
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                        databaseReference1.child("requestFinish").setValue("Finished");
+                        //Toast.makeText(admin_request_details.this,tvLati,Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else{
+            AlertDialog.Builder builder=new AlertDialog.Builder(admin_request_details.this);
+            builder.setMessage("The request Id is wrong please try again")
+                    .create().show();
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
                     ==PackageManager.PERMISSION_GRANTED){
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 2, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
             }
         }
     }

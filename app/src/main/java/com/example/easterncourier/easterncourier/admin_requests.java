@@ -89,6 +89,7 @@ public class admin_requests extends AppCompatActivity implements Adapter_admin_r
         intent.putExtra("Sender Longitude",admin_request_item1.getSenderLocationLongitude());
         intent.putExtra("Receiver Latitude",admin_request_item1.getReceiverLocationLatitude());
         intent.putExtra("Receiver Longitude",admin_request_item1.getReceiverLocationLongitude());
+        intent.putExtra("ifCourier","Admin");
 
 
         startActivity(intent);

@@ -91,6 +91,7 @@ public class courier_client_request extends AppCompatActivity implements Adapter
         intent.putExtra("Sender Latitude",admin_request_item1.getSenderLocationLatitude());
         intent.putExtra("Sender Longitude",admin_request_item1.getSenderLocationLongitude());
         intent.putExtra("Courier Id",courierId);
+        intent.putExtra("ifCourier","Courier");
         startActivity(intent);
 
 
