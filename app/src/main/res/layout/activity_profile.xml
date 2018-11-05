@@ -9,172 +9,224 @@
     android:orientation="vertical"
     android:background="@color/colorBackGroundCard"
     >
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:padding="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="273dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/arrow"
+            android:paddingTop="5dp"
+            android:text="Profile"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp">
+        android:layout_height="649dp">
+
         <LinearLayout
-            android:background="@drawable/gradient_background"
             android:layout_width="match_parent"
-            android:layout_height="350dp">
+            android:layout_height="197dp"
+            android:background="@color/colorBackGroundCard">
 
             <ImageView
-                android:layout_marginTop="85dp"
-                android:layout_marginLeft="145dp"
                 android:layout_width="119dp"
                 android:layout_height="119dp"
-                android:src="@drawable/profile" />
-
-
+                android:layout_marginLeft="145dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/def_photo" />
 
 
         </LinearLayout>
+
         <TextView
-            android:layout_marginLeft="110dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="160dp"
             android:text="Enrique Tumangan Jr."
-            android:layout_marginTop="210dp"
-            android:layout_marginRight="50dp"
             android:textAlignment="center"
-            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
             android:textSize="21sp"
-            android:textColor="@color/colorWhite"/>
+            android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
             android:layout_width="330dp"
             android:layout_height="505dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="240dp"
             app:cardBackgroundColor="@color/colorBackGround">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="365dp"
                 android:orientation="vertical"
                 android:weightSum="3">
 
                 <LinearLayout
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="70dp"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="70dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:textAlignment="center"
-                        android:text="Address:"
+                        android:layout_marginRight="15dp"
                         android:drawableLeft="@drawable/ic_home_black_24dp"
-                        android:drawableTint="@color/colorPrimary"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/colorSemiWhite"
+                        android:drawableTint="@color/colorPrimary"
+                        android:text="Address:"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
-                        android:layout_marginRight="15dp"/>
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pitpitan,Bulakan,Bulacan"
-                        android:textSize="20sp"
                         android:textAlignment="center"
-                        android:textColor="@color/colorAccent"
-                        android:textStyle="bold"
-                        />
+                        android:textColor="@color/colorSemiWhite"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
-
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="4dp"
+
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:textAlignment="center"
-                        android:text="Contact:"
+                        android:layout_marginRight="15dp"
                         android:drawableLeft="@drawable/ic_local_phone_black_24dp"
-                        android:drawableTint="@color/colorPrimary"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/colorSemiWhite"
+                        android:drawableTint="@color/colorPrimary"
+                        android:text="Contact:"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
-                        android:layout_marginRight="15dp"/>
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="+639554418568"
-                        android:textSize="20sp"
                         android:textAlignment="center"
-                        android:textColor="@color/colorAccent"
-                        android:textStyle="bold"
-                        />
+                        android:textColor="@color/colorSemiWhite"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
-
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:textAlignment="center"
-                        android:text="Birthday:"
+                        android:layout_marginRight="15dp"
                         android:drawableLeft="@drawable/ic_cake_black_24dp"
-                        android:drawableTint="@color/colorPrimary"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/colorSemiWhite"
+                        android:drawableTint="@color/colorPrimary"
+                        android:text="Birthday:"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
-                        android:layout_marginRight="15dp"/>
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="January 03 1999"
-                        android:textSize="20sp"
                         android:textAlignment="center"
-                        android:textColor="@color/colorAccent"
-                        android:textStyle="bold"
-                        />
+                        android:textColor="@color/colorSemiWhite"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="77dp"
+
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="15dp"
+                        android:drawableLeft="@drawable/gender"
+                        android:drawablePadding="5dp"
+                        android:drawableTint="@color/colorPrimary"
+                        android:text="Gender : "
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorSemiWhite"
+                        android:textSize="20sp" />
+                </LinearLayout>
 
 
             </LinearLayout>
 
 
-
         </android.support.v7.widget.CardView>
 
         <Button
-            android:padding="6dp"
-            android:drawableLeft="@drawable/ic_edit_black_24dp"
-
-            android:textStyle="italic"
-            android:textColor="@color/colorSemiWhite"
             android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="212dp"
             android:background="@drawable/signin_btn"
+            android:drawableLeft="@drawable/ic_edit_black_24dp"
+            android:padding="6dp"
             android:text="Edit Profile"
-            android:textSize="15sp"
             android:textAllCaps="false"
-            />
-
+            android:textColor="@color/colorSemiWhite"
+            android:textSize="15sp"
+            android:textStyle="italic" />
 
 
     </RelativeLayout>

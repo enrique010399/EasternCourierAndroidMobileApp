@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +34,7 @@ public class addCourierAccount extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST=1;
     private Uri mImageUri;
     private StorageReference mStorageRef;
-    DatabaseReference databaseCourierAccount;
+    DatabaseReference databaseCourierAccount,databaseCourierAccountLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +42,11 @@ public class addCourierAccount extends AppCompatActivity {
         setContentView(R.layout.add_courier_account);
 
         databaseCourierAccount = FirebaseDatabase.getInstance().getReference("Courier Accounts");
+        databaseCourierAccountLocation=FirebaseDatabase.getInstance().getReference("Courier Accounts Location");
         mStorageRef= FirebaseStorage.getInstance().getReference("Courier Accounts");
 
-        courierFirstName=findViewById(R.id.courierFirstName);
-        courierLastName=findViewById(R.id.courierLastName);
+        courierFirstName=findViewById(R.id.firstNameEditText);
+        courierLastName=findViewById(R.id.lastNameEditText);
         courierAddress=findViewById(R.id.courierAddress);
         courierPhoneNumber=findViewById(R.id.courierPhoneNumber);
         courierUserName=findViewById(R.id.courierUserName);
@@ -84,6 +87,8 @@ public class addCourierAccount extends AppCompatActivity {
                             "not set","not set","none",mImageUri+"",courierUserName.getText().toString(),
                             courierPassword.getText().toString());
                     databaseCourierAccount.child(id).setValue(addCourierAccountItem1);
+                    GeoFire geoFire= new GeoFire(databaseCourierAccountLocation);
+                    geoFire.setLocation(id,new GeoLocation(0.00,0.00));
                     Toast.makeText(addCourierAccount.this,"New Courier Account Added",Toast.LENGTH_LONG).show();
 
                 }

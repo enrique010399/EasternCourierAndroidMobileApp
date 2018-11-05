@@ -39,7 +39,6 @@ public class courier_enter_requestid_dialog extends AppCompatDialogFragment  {
                     }
                 });
         requestIdEt=view.findViewById(R.id.requestIdEt);
-
         return builder.create();
     }
 

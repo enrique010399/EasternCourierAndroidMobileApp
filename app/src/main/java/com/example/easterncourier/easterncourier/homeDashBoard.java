@@ -30,13 +30,13 @@ public class homeDashBoard extends AppCompatActivity implements View.OnClickList
         cardViewBook=(CardView) findViewById(R.id.cardViewBook);
         cardViewProfile=(CardView) findViewById(R.id.cardViewProfile);
         cardViewNotification=(CardView) findViewById(R.id.cardViewNotification);
-        cardViewMessages=(CardView) findViewById(R.id.cardViewMessages);
+        //cardViewMessages=(CardView) findViewById(R.id.cardViewMessages);
         cardViewHistory=(CardView) findViewById(R.id.cardViewHistory);
 
         cardViewBook.setOnClickListener(this);
         cardViewProfile.setOnClickListener(this);
         cardViewNotification.setOnClickListener(this);
-        cardViewMessages.setOnClickListener(this);
+        //cardViewMessages.setOnClickListener(this);
         cardViewHistory.setOnClickListener(this);
 
     }
@@ -56,10 +56,10 @@ public class homeDashBoard extends AppCompatActivity implements View.OnClickList
             case R.id.cardViewNotification: i=new Intent(this,Notification.class);
                 i.putExtra("Client UserName",clientUserName);
             startActivity(i);break;
-            case R.id.cardViewMessages: i=new Intent(this,Messages.class);
+            /*case R.id.cardViewMessages: i=new Intent(this,Messages.class);
             i.putExtra("Client UserName",clientUserName);
             startActivity(i);
-            break;
+            break;*/
             case R.id.cardViewHistory: i=new Intent(this,History.class);startActivity(i);break;
             default:break;
 

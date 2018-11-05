@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/courierAddress" />
 
     <EditText
-        android:id="@+id/courierLastName"
+        android:id="@+id/lastNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -69,10 +69,10 @@
         android:textColor="@color/colorWhite"
         android:textColorHint="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courierFirstName" />
+        app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
     <EditText
-        android:id="@+id/courierFirstName"
+        android:id="@+id/firstNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -97,7 +97,7 @@
         android:textColor="@color/colorWhite"
         android:textColorHint="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courierLastName" />
+        app:layout_constraintTop_toBottomOf="@+id/lastNameEditText" />
 
     <ImageView
         android:id="@+id/courierImage"
