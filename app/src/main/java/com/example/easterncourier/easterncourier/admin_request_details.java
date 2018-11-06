@@ -133,17 +133,18 @@ public class admin_request_details extends AppCompatActivity implements courier_
         assignCourierBtn = findViewById(R.id.assignCourierBtn);
         onTheWayBtn = findViewById(R.id.onTheWayBtn);
         finishDeliveryBtn = findViewById(R.id.finishDeliveryBtn);
+        Button stopLocationBtn=findViewById(R.id.stopBtn);
+
 
 
         String ifCourier = getIntent().getExtras().getString("ifCourier");
         if (ifCourier.equals("Courier")) {
             assignCourierBtn.setVisibility(View.INVISIBLE);
-
-
         } else if (ifCourier.equals("Admin")) {
             assignCourierBtn.setVisibility(View.VISIBLE);
             onTheWayBtn.setVisibility(View.INVISIBLE);
             finishDeliveryBtn.setVisibility(View.INVISIBLE);
+            stopLocationBtn.setVisibility(View.INVISIBLE);
         } else {
             Toast.makeText(this, "Unknown account type", Toast.LENGTH_LONG);
         }
@@ -158,90 +159,7 @@ public class admin_request_details extends AppCompatActivity implements courier_
         // restore the values from saved instance state
         restoreValuesFromBundle(savedInstanceState);
 
-        /*locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(final Location location) {
-                //tvLongi = String.valueOf(location.getLongitude());
-                //tvLati = String.valueOf(location.getLatitude());
-                Log.d("Location", location.toString());
-                try{
-                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Courier Accounts Location");
-                    GeoFire geoFire= new GeoFire(databaseReference);
-                    geoFire.setLocation(getIntent().getExtras().getString("Courier Id"),new GeoLocation(location.getLatitude(),location.getLongitude()));
-                    /*final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Courier Accounts").child(getIntent().getExtras().getString("Courier Id"));
-                    databaseReference1.addValueEventListener(new ValueEventListener(){
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                                databaseReference1.child("courierLocationLatitude").setValue(String.valueOf(location.getLatitude()));
-                                databaseReference1.child("courierLocationLongitude").setValue(String.valueOf(location.getLongitude()));
-                                //Toast.makeText(admin_request_details.this,tvLati,Toast.LENGTH_SHORT).show();
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }catch(Exception e){
-                    //Log.d("Location", e.getMessage().toString());
-                }
-
-
-
-                //getLocation();
-
-            }*/
-
-            /*@Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                Toast.makeText(admin_request_details.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                //Toast.makeText(this, "Enabled new provider!" + provider, Toast.LENGTH_SHORT).show();
-                Toast.makeText(admin_request_details.this, "Enable New Provider" + provider, Toast.LENGTH_SHORT).show();
-                ;
-            }
-        };
-        if (Build.VERSION.SDK_INT < 23) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-                return;
-            }
-        }
-        else{
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-                return;
-            } else {
-
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-
-            }
-        }
-
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1, locationListener);
-        */
 
         requestIdTv.setText(getIntent().getExtras().getString("Request Id"));
         senderNameTv.setText(getIntent().getExtras().getString("Sender Name"));
@@ -274,7 +192,7 @@ public class admin_request_details extends AppCompatActivity implements courier_
             }
         });
 
-        Button stopLocationBtn=findViewById(R.id.stopBtn);
+
         stopLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

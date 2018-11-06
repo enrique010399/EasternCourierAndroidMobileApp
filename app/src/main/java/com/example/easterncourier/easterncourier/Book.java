@@ -74,7 +74,7 @@ public class Book extends AppCompatActivity implements LocationListener {
 
     LatLng latLng;
 
-
+    String whichLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +90,27 @@ public class Book extends AppCompatActivity implements LocationListener {
         final EditText dropingPointLocation=findViewById(R.id.droppingPointEditText);
         final EditText receiverName=findViewById(R.id.receiverNameEditText);
         final EditText packageDescription=findViewById(R.id.requestDescription);
+        Button chooseCurrentLOcation=findViewById(R.id.showReceiverLocationBtn);
+        chooseCurrentLOcation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichLocation="chooseCurrentLocation";
+                PlacePicker .IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+
+                    Intent  intent=builder.build(Book.this);
+                    startActivityForResult(intent,PLACE_PICKER_REQUEST);
+
+
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         Button submitRequest=findViewById(R.id.submitRequest),
         getDroppingPointLocation=findViewById(R.id.getDropingPointLocation);
         getDroppingPointLocation.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +120,7 @@ public class Book extends AppCompatActivity implements LocationListener {
                 intent.putExtra("clientLatitude",tvLati);
                 intent.putExtra("clientLongitude",tvLongi);
                 startActivity(intent);*/
-
+                whichLocation="getDroppingPointLocation";
                 PlacePicker .IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                 try {
@@ -189,7 +210,6 @@ public class Book extends AppCompatActivity implements LocationListener {
             });
         }
 
-
     }
 
     private void openFileChooser(){
@@ -207,6 +227,7 @@ public class Book extends AppCompatActivity implements LocationListener {
             Picasso.get().load(mImageUri).into(mImageView);
         }
 
+
         if (requestCode == PLACE_PICKER_REQUEST){
             EditText droppingPoint=findViewById(R.id.droppingPointEditText);
             if (resultCode==RESULT_OK){
@@ -214,13 +235,26 @@ public class Book extends AppCompatActivity implements LocationListener {
                 String address=String.format("Place: ",place.getAddress());
                 place.getLatLng();
                 latLng=place.getLatLng();
-                droppingPointLatitude=String.valueOf(latLng.latitude);
-                droppingPointLongitude=String.valueOf(latLng.longitude);
+
+
                 //Toast.makeText(Book.this,String.format(place.getLatLng()),Toast.LENGTH_LONG);
-                droppingPoint.setText(place.getAddress().toString());
+                //droppingPoint.setText(place.getAddress().toString());
+                if (whichLocation.equals("chooseCurrentLocation")){
+                    tvLati=String.valueOf(latLng.latitude);
+                    tvLongi=String.valueOf(latLng.longitude);
+                    EditText senderLocation=findViewById(R.id.senderLOcation);
+                    senderLocation.setText(place.getAddress().toString());
+                    //Toast.makeText(Book.this,whichLocation,Toast.LENGTH_LONG).show();
+                }
+
+                else{
+                    Toast.makeText(Book.this,whichLocation,Toast.LENGTH_LONG).show();
+                    droppingPointLatitude=String.valueOf(latLng.latitude);
+                    droppingPointLongitude=String.valueOf(latLng.longitude);
+                    droppingPoint.setText(place.getAddress().toString());
+                }
             }
         }
-
     }
 
     @Override
@@ -255,10 +289,10 @@ public class Book extends AppCompatActivity implements LocationListener {
 
         TextView senderLocation=findViewById(R.id.senderLOcation);
 
-        tvLongi = String.valueOf(location.getLongitude());
-        tvLati = String.valueOf(location.getLatitude());
+        //tvLongi = String.valueOf(location.getLongitude());
+        //tvLati = String.valueOf(location.getLatitude());
 
-        senderLocation.setText(tvLongi+" "+tvLati);
+        //senderLocation.setText(tvLongi+" "+tvLati);
 
     }
 

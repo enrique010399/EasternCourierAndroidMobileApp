@@ -29,8 +29,6 @@ public class receiverLocation extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -50,7 +48,6 @@ public class receiverLocation extends FragmentActivity implements OnMapReadyCall
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.mapstyledarker));
-
             if (!success) {
                 Log.e("receiver", "Style parsing failed.");
             }

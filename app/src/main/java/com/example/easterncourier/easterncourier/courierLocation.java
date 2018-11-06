@@ -108,13 +108,13 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            /*boolean success = googleMap.setMapStyle(
+            boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.standard));*/
-            googleMap.setMapType(googleMap.MAP_TYPE_SATELLITE);
-            /*if (!success) {
+                            this, R.raw.standard));
+
+            if (!success) {
                 Log.e(TAG, "Style parsing failed.");
-            }*/
+            }
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
@@ -140,7 +140,11 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location"));
 
-
+                Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));
+                Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
+                final LatLng clientLocation = new LatLng(clientLatitude, clientLongitude);
+                mMap.addMarker(new MarkerOptions().position(clientLocation).title("Your Requested Location"));
+                mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
             }
 
             @Override
@@ -167,8 +171,24 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                 mMap.clear();
                 LatLng latLng=new LatLng(location.latitude,location.longitude);
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location"));
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));
+                Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
+                final LatLng clientLocation = new LatLng(clientLatitude, clientLongitude);
+                mMap.addMarker(new MarkerOptions().position(clientLocation).title("Your Requested Location"));
+
+                mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
                 //mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+                if (distance(clientLocation.latitude,clientLocation.longitude,location.latitude,location.longitude)<0.0155343){
+                    Notification notification=new NotificationCompat.Builder(courierLocation.this,App.CHANNEL_1_ID)
+                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                            .setContentTitle("Eastern Courier")
+                            .setContentText("The courier is within 25 meters away")
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();
+                    notificationManager.notify(1,notification);
+                }
             }
 
             @Override
@@ -181,45 +201,9 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
             }
         });
-        /*databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))) {
-                        addCourierAccountItem addCourierAccountItem1 = dataSnapshot1.getValue(addCourierAccountItem.class);
-                        Marker client;
-                        //client = mMap.addMarker(new MarkerOptions().position(courierLocation).title("Courier Location"));
-                        mMap.clear();
-                        courierLocation = new LatLng(Double.parseDouble(addCourierAccountItem1.getCourierLocationLatitude().toString()), Double.parseDouble(addCourierAccountItem1.getCourierLocationLongitude().toString()));
-                        mMap.addMarker(new MarkerOptions().position(courierLocation).title("Courier Location"));
-                        mMap.addMarker(new MarkerOptions().position(clientLocation).title("Your Requested Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                        //mMap.addPolyline(new PolylineOptions().add(courierLocation).width(8f).color(Color.BLUE));
-                        mMap.setMaxZoomPreference(40.0f);
-                        mMap.setMinZoomPreference(18.0f);
 
-                        mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
-                        if (distance(clientLocation.latitude,clientLocation.longitude,courierLocation.latitude,courierLocation.longitude)<0.0155343){
-                            Notification notification=new NotificationCompat.Builder(courierLocation.this,App.CHANNEL_1_ID)
-                                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                                    .setContentTitle("Eastern Courier")
-                                    .setContentText("The courier is within 25 meters away")
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();
-                            notificationManager.notify(1,notification);
-                        }
 
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(courierLocation));
 
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
 
 
     }
@@ -243,6 +227,52 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
 
         return dist; // distance in  miles
     }
+
+    /*private void checkDistanceAndGetClientLocation(){
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Courier Accounts");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierId().equals(getIntent().getExtras().get("Courier Id"))) {
+                        addCourierAccountItem addCourierAccountItem1 = dataSnapshot1.getValue(addCourierAccountItem.class);
+                        Marker client;
+                        //client = mMap.addMarker(new MarkerOptions().position(courierLocation).title("Courier Location"));
+
+                        Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));
+                        Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
+                        final LatLng clientLocation = new LatLng(clientLatitude, clientLongitude);
+                        courierLocation = new LatLng(Double.parseDouble(addCourierAccountItem1.getCourierLocationLatitude().toString()), Double.parseDouble(addCourierAccountItem1.getCourierLocationLongitude().toString()));
+                        //mMap.addMarker(new MarkerOptions().position(courierLocation).title("Courier Location"));
+                        mMap.addMarker(new MarkerOptions().position(clientLocation).title("Your Requested Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                        //mMap.addPolyline(new PolylineOptions().add(courierLocation).width(8f).color(Color.BLUE));
+                        //mMap.setMaxZoomPreference(40.0f);
+                        //mMap.setMinZoomPreference(18.0f);
+
+                        mMap.addCircle(new CircleOptions().center(clientLocation).radius(25.0).strokeWidth(3f).strokeColor(Color.CYAN).fillColor(Color.argb(70,0,255,255)));
+                        if (distance(clientLocation.latitude,clientLocation.longitude,courierLocation.latitude,courierLocation.longitude)<0.0155343){
+                            Notification notification=new NotificationCompat.Builder(courierLocation.this,App.CHANNEL_1_ID)
+                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                    .setContentTitle("Eastern Courier")
+                                    .setContentText("The courier is within 25 meters away")
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE).build();
+                            notificationManager.notify(1,notification);
+                        }
+
+                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(courierLocation));
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }*/
 
 
 

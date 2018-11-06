@@ -234,7 +234,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Stop"
-        app:layout_constraintTop_toBottomOf="@+id/onTheWayBtn"
-        tools:layout_editor_absoluteX="301dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/onTheWayBtn" />
 
 </android.support.constraint.ConstraintLayout>
