@@ -58,10 +58,11 @@ public class courier_client_request extends AppCompatActivity implements Adapter
                     if (dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierUserName().equals(getIntent().getExtras().getString("Courier UserName"))){
                         admin_request_item admin_request_item1= dataSnapshot1.getValue(admin_request_item.class);
                         courierId=dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierId().toString();
-                        list.add(admin_request_item1);
+                        if (!admin_request_item1.getRequestFinish().equals("Finished")){
+                            list.add(admin_request_item1);
+                        }
+
                     }
-
-
 
                 }
                 adapter_courier_client_request=new Adapter_courier_client_request(courier_client_request.this,list);
@@ -92,6 +93,13 @@ public class courier_client_request extends AppCompatActivity implements Adapter
         intent.putExtra("Sender Longitude",admin_request_item1.getSenderLocationLongitude());
         intent.putExtra("Courier Id",courierId);
         intent.putExtra("ifCourier","Courier");
+        intent.putExtra("Receiver Number",admin_request_item1.getReceiverContactNumber());
+        intent.putExtra("Request Bill",admin_request_item1.getRequestBill());
+        intent.putExtra("Request Cash",admin_request_item1.getRequestCash());
+        intent.putExtra("Request Change",admin_request_item1.getRequestChange());
+        intent.putExtra("Receiver Longitude",admin_request_item1.getReceiverLocationLongitude());
+        intent.putExtra("Receiver Latitude",admin_request_item1.getReceiverLocationLatitude());
+
         startActivity(intent);
 
 

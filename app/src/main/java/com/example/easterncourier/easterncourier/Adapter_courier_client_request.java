@@ -65,8 +65,6 @@ public class Adapter_courier_client_request extends RecyclerView.Adapter<Adapter
             clientFullName=itemView.findViewById(R.id.couruerClientFullNameRequest);
             clientTimeRequested=itemView.findViewById(R.id.courierClientRequestTime);
 
-
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+
 public class homeDashBoard extends AppCompatActivity implements View.OnClickListener{
     private CardView cardViewBook,cardViewProfile,cardViewNotification,cardViewMessages,cardViewHistory;
     String clientUserName;
@@ -15,6 +17,8 @@ public class homeDashBoard extends AppCompatActivity implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Glide.with(homeDashBoard.this).load()
 
         setContentView(R.layout.home_dashboard);
         if(getIntent().getExtras().get("username")==null && getIntent().getExtras().get("clientFullName")==null){

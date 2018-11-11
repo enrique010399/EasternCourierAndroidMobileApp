@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:name=".App"
@@ -81,7 +83,13 @@
         <activity
             android:name=".receiverLocation"
             android:label="@string/title_activity_receiver_location" />
-        <activity android:name=".courier_payment_transaction"></activity>
+        <activity android:name=".courier_payment_transaction" />
+        <activity
+            android:name=".courierShowMyLocation"
+            android:label="@string/title_activity_courier_show_my_location" />
+        <activity
+            android:name=".courierShowMyLocationSample"
+            android:label="@string/title_activity_courier_show_my_location_sample"></activity>
     </application>
 
 </manifest>

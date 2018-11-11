@@ -50,7 +50,7 @@ public class SignIn extends AppCompatActivity {
     String accountFirstName;
     String accountLastName;
     String correct;
-
+    String accountPhoneNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +116,7 @@ public class SignIn extends AppCompatActivity {
                     if (dataSnapshot1.getValue(addCourierAccountItem.class).getCourierUserName().equals(userNameTf
                             .getText().toString()) && dataSnapshot1.getValue(addCourierAccountItem.class).getCourierPassword().equals(passwordTf.getText().toString())){
                         correct="Yes";
-                        //addCourierAccountItem addCourierAccountItem1=new addCourierAccountItem();
+                        addCourierAccountItem addCourierAccountItem1=new addCourierAccountItem();
                     }
                     else{
                         correct="No";
@@ -142,6 +142,7 @@ public class SignIn extends AppCompatActivity {
                     if (success){
                         accountFirstName= jsonResponse.getString("accountFirstName");
                         accountLastName= jsonResponse.getString("accountLastName");
+                        accountPhoneNumber=jsonResponse.getString("accountPhoneNumber");
                         animateButtonWidth();
                         fadeOutTextAndSetProgressDialog();
                         nextAction();
@@ -256,22 +257,14 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void run() {
 
-
-
                 final EditText userName=  findViewById(R.id.usernameTf);
                     Intent intent=new Intent(SignIn.this,homeDashBoard.class);
                     intent.putExtra("username",userName.getText().toString());
                     intent.putExtra("clientFullName", accountFirstName+" "+accountLastName);
+                    intent.putExtra("accountPhoneNumber",accountPhoneNumber);
                     SignIn.this.startActivity(intent);
-
-
             }
         },100);
-
-
-
-
-
     }
 
     private int getFinalWidth(){

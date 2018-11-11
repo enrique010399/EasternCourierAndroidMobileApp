@@ -50,7 +50,7 @@ public class register_client_account extends AppCompatActivity {
 
                             if (success){
                                 AlertDialog.Builder builder=new AlertDialog.Builder(register_client_account.this);
-                                builder.setMessage("Registered Successed!!!")
+                                builder.setMessage("Registered Success!!!")
                                         .create().show();
                                 Intent intent=new Intent(register_client_account.this, SignIn.class);
                                 register_client_account.this.startActivity(intent);
@@ -74,12 +74,8 @@ public class register_client_account extends AppCompatActivity {
                 RequestQueue queue= Volley.newRequestQueue(register_client_account.this);
                 queue.add(registerClientRequest);
 
-
             }
         });
 
-
-
-        
     }
 }

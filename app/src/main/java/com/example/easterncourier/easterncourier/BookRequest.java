@@ -28,7 +28,7 @@ public class BookRequest {
 
     }
 
-    public BookRequest(String requestId, String senderLocationLatitude, String senderLocationLongitude, String receiverLocationLatitude, String receiverLocationLongitude, String receiverName, String requestDescription, String clientUserName, String clientFullName, String clientDateRequested, String clientImage, String requestAssignedCourierId, String requestAssignedCourierUserName, String requestAssignedCourierFullName, String requestFinish) {
+    public BookRequest(String requestId, String senderLocationLatitude, String senderLocationLongitude, String receiverLocationLatitude, String receiverLocationLongitude, String receiverName, String requestDescription, String clientUserName, String clientFullName, String clientDateRequested, String clientImage, String requestAssignedCourierId, String requestAssignedCourierUserName, String requestAssignedCourierFullName) {
         this.requestId = requestId;
         this.senderLocationLatitude = senderLocationLatitude;
         this.senderLocationLongitude = senderLocationLongitude;
@@ -45,6 +45,8 @@ public class BookRequest {
         this.requestAssignedCourierFullName = requestAssignedCourierFullName;
         this. requestFinish = requestFinish;
     }
+
+
 
     public String getRequestId() {
         return requestId;

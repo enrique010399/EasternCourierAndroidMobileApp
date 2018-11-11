@@ -8,4 +8,6 @@
     <string name="title_activity_courier_location">Map</string>
     <string name="title_activity_choose_dropping_point_location">Map</string>
     <string name="title_activity_receiver_location">Map</string>
+    <string name="title_activity_courier_show_my_location">Map</string>
+    <string name="title_activity_courier_show_my_location_sample">Map</string>
 </resources>

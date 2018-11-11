@@ -75,4 +75,52 @@ public class addCourierAccountItem {
     public String getCourierPassword() {
         return courierPassword;
     }
+
+    public void setCourierId(String courierId) {
+        this.courierId = courierId;
+    }
+
+    public void setCourierFirstName(String courierFirstName) {
+        this.courierFirstName = courierFirstName;
+    }
+
+    public void setCourierLastName(String courierLastName) {
+        this.courierLastName = courierLastName;
+    }
+
+    public void setCourierAddress(String courierAddress) {
+        this.courierAddress = courierAddress;
+    }
+
+    public void setCourierBirthDate(String courierBirthDate) {
+        this.courierBirthDate = courierBirthDate;
+    }
+
+    public void setCourierPhoneNumber(String courierPhoneNumber) {
+        this.courierPhoneNumber = courierPhoneNumber;
+    }
+
+    public void setCourierLocationLatitude(String courierLocationLatitude) {
+        this.courierLocationLatitude = courierLocationLatitude;
+    }
+
+    public void setCourierLocationLongitude(String courierLocationLongitude) {
+        this.courierLocationLongitude = courierLocationLongitude;
+    }
+
+    public void setCourierClientList(String courierClientList) {
+        this.courierClientList = courierClientList;
+    }
+
+    public void setCourierImage(String courierImage) {
+        this.courierImage = courierImage;
+    }
+
+    public void setCourierUserName(String courierUserName) {
+        this.courierUserName = courierUserName;
+    }
+
+    public void setCourierPassword(String courierPassword) {
+        this.courierPassword = courierPassword;
+    }
 }

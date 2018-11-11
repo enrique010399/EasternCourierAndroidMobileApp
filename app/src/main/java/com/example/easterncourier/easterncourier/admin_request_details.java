@@ -2,9 +2,14 @@ package com.example.easterncourier.easterncourier;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -23,6 +28,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +63,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hbb20.CountryCodePicker;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -65,6 +72,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Date;
+import java.util.List;
 import java.util.TimerTask;
 
 import java.util.concurrent.ExecutorService;
@@ -72,9 +80,9 @@ import java.util.concurrent.Executors;
 
 import butterknife.ButterKnife;
 
-public class admin_request_details extends AppCompatActivity implements courier_enter_requestid_dialog.ExampleDialogListener {
+public class admin_request_details extends AppCompatActivity implements courier_enter_requestid_dialog.ExampleDialogListener,courier_enter_payment_dialog.ExampleDialogListener,admin_enter_bill_dialog.ExampleDialogListener {
     TextView requestIdTv, senderNameTv, receiverNameTv, dateRequestedTv, packageDescriptiontv;
-    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn, assignCourierBtn, onTheWayBtn, finishDeliveryBtn, payBtn;
+    Button viewPackageImageBtn, viewSenderLocationBtn, viewreceiverLocationBtn, assignCourierBtn, onTheWayBtn, finishDeliveryBtn, payBtn,enterBillBtn,declineBtn,showMyLocationBtn;
     String fromCourier;
     public static String tvLongi;
     public static String tvLati;
@@ -113,6 +121,11 @@ public class admin_request_details extends AppCompatActivity implements courier_
 
     // boolean flag to toggle the ui
     private Boolean mRequestingLocationUpdates;
+
+    private CountryCodePicker ccp;
+    private static final int REQUEST_SMS=0;
+    private BroadcastReceiver sentStatusReceiver,deliveredStatusReceiver;
+    public  int bill,change,cash;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,19 +146,45 @@ public class admin_request_details extends AppCompatActivity implements courier_
         assignCourierBtn = findViewById(R.id.assignCourierBtn);
         onTheWayBtn = findViewById(R.id.onTheWayBtn);
         finishDeliveryBtn = findViewById(R.id.finishDeliveryBtn);
+        payBtn=findViewById(R.id.payBtn);
+        enterBillBtn=findViewById(R.id.enterBillForTheRequestBtn);
+        declineBtn=findViewById(R.id.declineRequestBtn);
+        showMyLocationBtn=findViewById(R.id.showMyLocationBtn);
+
+
+
         Button stopLocationBtn=findViewById(R.id.stopBtn);
 
 
+        bill=Integer.parseInt(getIntent().getExtras().getString("Request Bill"));
+        change=Integer.parseInt(getIntent().getExtras().getString("Request Change"));
+        cash=Integer.parseInt(getIntent().getExtras().getString("Request Cash"));
 
         String ifCourier = getIntent().getExtras().getString("ifCourier");
         if (ifCourier.equals("Courier")) {
+
             assignCourierBtn.setVisibility(View.INVISIBLE);
+            enterBillBtn.setVisibility(View.INVISIBLE);
+            declineBtn.setVisibility(View.INVISIBLE);
+            assignCourierBtn.setVisibility(View.INVISIBLE);
+
+            if (cash==0){
+                payBtn.setVisibility(View.VISIBLE);
+            }
+            else{
+                payBtn.setVisibility(View.INVISIBLE);
+            }
+
         } else if (ifCourier.equals("Admin")) {
+            showMyLocationBtn.setVisibility(View.INVISIBLE);
             assignCourierBtn.setVisibility(View.VISIBLE);
             onTheWayBtn.setVisibility(View.INVISIBLE);
             finishDeliveryBtn.setVisibility(View.INVISIBLE);
             stopLocationBtn.setVisibility(View.INVISIBLE);
-        } else {
+            payBtn.setVisibility(View.INVISIBLE);
+
+        }
+        else {
             Toast.makeText(this, "Unknown account type", Toast.LENGTH_LONG);
         }
 
@@ -168,6 +207,16 @@ public class admin_request_details extends AppCompatActivity implements courier_
         packageDescriptiontv.setText(getIntent().getExtras().getString("Package Description"));
 
 
+        showMyLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(admin_request_details.this,courierShowMyLocationSample.class);
+                intent.putExtra("Sender Latitude",getIntent().getExtras().getString("Sender Latitude"));
+                intent.putExtra("Sender Longitude",getIntent().getExtras().getString("Sender Longitude"));
+                startActivity(intent);
+            }
+        });
+
         finishDeliveryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +235,6 @@ public class admin_request_details extends AppCompatActivity implements courier_
             public void onClick(View v) {
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
                 databaseReference.child("requestFinish").setValue("On The Way");
-
                 startLocationButtonClick();
 
             }
@@ -199,9 +247,6 @@ public class admin_request_details extends AppCompatActivity implements courier_
                 stopLocationUpdates();
             }
         });
-
-
-
 
 
         viewSenderLocationBtn.setOnClickListener(new View.OnClickListener() {
@@ -229,15 +274,36 @@ public class admin_request_details extends AppCompatActivity implements courier_
             public void onClick(View view) {
                 Intent intent = new Intent(admin_request_details.this, com.example.easterncourier.easterncourier.admin_choose_courier.class);
                 intent.putExtra("Request Id", requestIdTv.getText());
+                intent.putExtra("Receiver Contact Number",getIntent().getExtras().getString("Receiver Contact Number"));
                 startActivity(intent);
             }
         });
+
+        payBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                courier_enter_payment_dialog courier_enter_payment_dialog1 = new courier_enter_payment_dialog();
+                //courier_enter_requestid_dialog1.trueRequestId=requestIdTv.getText().toString();
+                //courier_enter_payment_dialog1.billTv.setText(getIntent().getExtras().getString("Request Bill"));
+                courier_enter_payment_dialog1.show(getSupportFragmentManager(), "Cash");
+            }
+        });
+
+        enterBillBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                admin_enter_bill_dialog admin_enter_bill_dialog1=new admin_enter_bill_dialog();
+                admin_enter_bill_dialog1.show(getSupportFragmentManager(),"Bill");
+            }
+        });
+
+
     }
 
     private void init() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
-
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -252,22 +318,18 @@ public class admin_request_details extends AppCompatActivity implements courier_
 
 
         mRequestingLocationUpdates = false;
-
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         mLocationSettingsRequest = builder.build();
     }
-
-
-
     /**
      * Restoring values from saved instance state
      */
+
     private void restoreValuesFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("is_requesting_updates")) {
@@ -433,6 +495,49 @@ public class admin_request_details extends AppCompatActivity implements courier_
         }
 
         updateLocationUI();
+
+        sentStatusReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s="Unknown Error";
+                switch (getResultCode()){
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        s="Error: No Service Available";
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        s="Error: No Service Available";
+                        break;
+                    case Activity.RESULT_OK:
+                        s="Message Sent Successfully!!";
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        s="Generic Failure Error";
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        s="Error: No Service Available";
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        };
+        deliveredStatusReceiver=(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s="Messages Not Delivered";
+                switch(getResultCode()){
+                    case Activity.RESULT_OK:
+                        s="Message Delivered Successfully";
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        break;
+                }
+            }
+        });
+
+        registerReceiver(sentStatusReceiver,new IntentFilter("SMS_SENT"));
+        registerReceiver(deliveredStatusReceiver,new IntentFilter("SMS_DELIVERED"));
     }
 
     private boolean checkPermissions() {
@@ -445,6 +550,8 @@ public class admin_request_details extends AppCompatActivity implements courier_
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(sentStatusReceiver);
+        unregisterReceiver(deliveredStatusReceiver);
 
         if (mRequestingLocationUpdates) {
             // pausing location updates
@@ -462,6 +569,27 @@ public class admin_request_details extends AppCompatActivity implements courier_
     @Override
     public void applyTexts(String requestId) {
         if (requestId.equals(requestIdTv.getText().toString())) {
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                int hasSMSPermission= checkSelfPermission(Manifest.permission.SEND_SMS);
+                if (hasSMSPermission != PackageManager.PERMISSION_GRANTED){
+                    if (!shouldShowRequestPermissionRationale(Manifest.permission.SEND_SMS)){
+                        showMessageOKCancel("You need to allow access to send SMS",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                                            requestPermission(new String[] {Manifest.permission.SEND_SMS},REQUEST_SMS);
+                                        }
+                                    }
+                                });
+                        return;
+                    }
+                    requestPermission(new String[] {Manifest.permission.SEND_SMS},REQUEST_SMS);
+                    return;
+                }
+                sendMySms();
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(admin_request_details.this);
             builder.setMessage("The request Id is correct")
                     .create().show();
@@ -486,74 +614,130 @@ public class admin_request_details extends AppCompatActivity implements courier_
         }
     }
 
-    /*protected synchronized void buildGoogleApiClient(){
-        mGoogleApiClient=new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mLastLocation=location;
-        LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-
-        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Courier Accounts");
-        GeoFire geoFire= new GeoFire(databaseReference);
-        geoFire.setLocation(getIntent().getExtras().getString("Courier Id"),new GeoLocation(location.getLatitude(),location.getLongitude()));
-    }
-
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
+    public void sendMySms(){
+        String phone;
+        SmsManager sms=SmsManager.getDefault();
+        List<String> messages=sms.divideMessage("Your Package was delivered");
+        for (String msg : messages){
+            PendingIntent sentIntent=PendingIntent.getBroadcast(admin_request_details.this,0,new Intent("SMS_SENT"),0);
+            PendingIntent deliveredIntent=PendingIntent.getBroadcast(admin_request_details.this,0,new Intent("SMS_DELIVERED"),0);
+            sms.sendTextMessage(getIntent().getExtras().getString("Receiver Number"),null,msg,sentIntent,deliveredIntent);
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
+    private void showMessageOKCancel(String message,DialogInterface.OnClickListener okListener){
+        new android.support.v7.app.AlertDialog.Builder(admin_request_details.this)
+                .setMessage(message)
+                .setPositiveButton("OK",okListener)
+                .setNegativeButton("Cancel",null)
+                .create().show();
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    private boolean checkPermission(){
+        return (ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.SEND_SMS))== PackageManager.PERMISSION_GRANTED;
     }
 
+    private void requestPermission(String[] strings, int requestSms){
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS}, REQUEST_SMS);
+    }
+
+
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Courier Accounts");
-        GeoFire geoFire= new GeoFire(databaseReference);
-        geoFire.removeLocation(getIntent().getExtras().getString("Courier Id"));
-    }*/
-
-
-
-    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    ==PackageManager.PERMISSION_GRANTED){
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            }
+        switch (requestCode){
+            case REQUEST_SMS:
+                if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(getApplicationContext(),"Permission Granted, Now you can access sms",Toast.LENGTH_SHORT).show();
+                    sendMySms();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Permission Denied ,You cannot access sms", Toast.LENGTH_SHORT).show();
+                    if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.M){
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.SEND_SMS)){
+                            showMessageOKCancel("You need to allow access to both the permissions",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                                                requestPermission(new String[]{Manifest.permission.SEND_SMS},REQUEST_SMS);
+                                            }
+                                        }
+                                    });
+                            return;
+                        }
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode,permissions,grantResults);
         }
     }
 
-    public void CheckPermission() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+    @Override
+    public void processPayment(final Integer cash) {
+        final Integer change;
+        //bill=Integer.parseInt(getIntent().getExtras().getString("Request Bill"));
+
+        //getIntent().getExtras().getString("Request Cash");
+        //getIntent().getExtras().getString("Request Change");
+        if (bill<=cash){
+            change=cash-bill;
+            AlertDialog.Builder builder = new AlertDialog.Builder(admin_request_details.this);
+            builder.setMessage("Request Paid Sucessfully,, Your Change is "+change.toString())
+                    .create().show();
+            final DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
+            databaseReference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        databaseReference1.child("requestChange").setValue(change.toString());
+                        databaseReference1.child("requestCash").setValue(cash.toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
-    }*/
+        else{
+            Toast.makeText(admin_request_details.this, "Insufficient Payment!!!", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    @Override
+    public void processBill(final Integer bill) {
+        if (!bill.equals(null) && !bill.equals(0)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(admin_request_details.this);
+            builder.setMessage("Bill for the Service Assign")
+                    .create().show();
+            final DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Client Request").child(requestIdTv.getText().toString());
+            databaseReference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        databaseReference1.child("requestBill").setValue(bill.toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(admin_request_details.this);
+            builder.setMessage("Please Enter Appropriate Bill!!!!!")
+                    .create().show();
+        }
+
+
+    }
 }

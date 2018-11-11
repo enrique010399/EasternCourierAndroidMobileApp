@@ -110,7 +110,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.standard));
+                            this, R.raw.mapstyle));
 
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
@@ -138,7 +138,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
                 LatLng latLng=new LatLng(location.latitude,location.longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location"));
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot)));
 
                 Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));
                 Double clientLongitude = Double.parseDouble(getIntent().getExtras().getString("Sender Longitude"));
@@ -170,7 +170,7 @@ public class courierLocation extends FragmentActivity implements OnMapReadyCallb
             public void onKeyMoved(String key, GeoLocation location) {
                 mMap.clear();
                 LatLng latLng=new LatLng(location.latitude,location.longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location"));
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Courier Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot)));
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 Double clientLatitude = Double.parseDouble(getIntent().getExtras().getString("Sender Latitude"));

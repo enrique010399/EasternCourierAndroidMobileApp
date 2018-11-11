@@ -23,8 +23,6 @@ public class registerClientRequest extends StringRequest {
         params.put("accountBirthDate", accountBirthDate);
         params.put("accountCurrentLocation", accountCurrentLocation);
         params.put("accountType", accountType);
-
-
     }
 
     @Override

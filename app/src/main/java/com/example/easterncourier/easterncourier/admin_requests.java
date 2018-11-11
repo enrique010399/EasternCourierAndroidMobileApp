@@ -54,8 +54,12 @@ public class admin_requests extends AppCompatActivity implements Adapter_admin_r
 
                 for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
                     admin_request_item admin_request_item1= dataSnapshot1.getValue(admin_request_item.class);
-                    list.add(admin_request_item1);
+                    if (!admin_request_item1.getRequestFinish().equals("Finished")){
+                        list.add(admin_request_item1);
+                    }
+
                 }
+
                 adapter_admin_requests=new Adapter_admin_requests(admin_requests.this,list);
                 recyclerView.setAdapter(adapter_admin_requests);
                 adapter_admin_requests.setOnItemClickListener(admin_requests.this);
@@ -89,9 +93,14 @@ public class admin_requests extends AppCompatActivity implements Adapter_admin_r
         intent.putExtra("Sender Longitude",admin_request_item1.getSenderLocationLongitude());
         intent.putExtra("Receiver Latitude",admin_request_item1.getReceiverLocationLatitude());
         intent.putExtra("Receiver Longitude",admin_request_item1.getReceiverLocationLongitude());
+        intent.putExtra("Receiver Contact Number",admin_request_item1.getReceiverContactNumber());
         intent.putExtra("ifCourier","Admin");
+        intent.putExtra("Request Bill",admin_request_item1.getRequestBill());
+        intent.putExtra("Request Cash",admin_request_item1.getRequestCash());
+        intent.putExtra("Request Change",admin_request_item1.getRequestChange());
+        if (!admin_request_item1.getRequestFinish().equals("Finish")){
 
-
+        }
         startActivity(intent);
 
     }

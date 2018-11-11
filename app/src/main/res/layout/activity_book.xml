@@ -50,13 +50,36 @@
         app:layout_constraintVertical_bias="0.25">
 
         <EditText
-            android:id="@+id/receiverNameEditText"
-            android:layout_width="351dp"
+            android:id="@+id/receiverContactNumberEditText"
+            android:layout_width="306dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="44dp"
 
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="145dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/add_clients26dp"
+            android:drawablePadding="1dp"
+            android:drawableTint="@color/colorPrimary"
+            android:ems="10"
+            android:hint="Receiver Contact Number"
+            android:inputType="phone"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.344"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/receiverNameEditText" />
+
+        <EditText
+            android:id="@+id/receiverNameEditText"
+            android:layout_width="309dp"
+            android:layout_height="50dp"
+
+            android:layout_marginEnd="145dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="12dp"
             android:drawableLeft="@drawable/add_clients26dp"
             android:drawablePadding="1dp"
             android:drawableTint="@color/colorPrimary"
@@ -68,9 +91,9 @@
             android:textColorHint="@color/colorPrimary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.336"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/droppingPointEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/getDropingPointLocation" />
 
         <Button
             android:id="@+id/showReceiverLocationBtn"
@@ -191,10 +214,9 @@
         <EditText
             android:id="@+id/requestDescription"
             android:layout_width="350dp"
-            android:layout_height="144dp"
+            android:layout_height="87dp"
             android:layout_marginEnd="45dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:background="@color/colorContainer"
             android:drawableLeft="@drawable/ic_description_black_24dp"
             android:drawablePadding="1dp"
@@ -207,8 +229,9 @@
             android:textSize="14sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/receiverNameEditText" />
+            tools:layout_editor_absoluteY="421dp" />
 
         <Button
             android:id="@+id/submitRequest"
@@ -230,7 +253,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/requestDescription"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

@@ -16,12 +16,16 @@ public class admin_request_item {
     String requestAssignedCourierUserName;
     String requestAssignedCourierFullName;
     String requestFinish;
+    String receiverContactNumber;
+    String requestBill;
+    String requestChange;
+    String requestCash;
 
     public admin_request_item(){
 
     }
 
-    public admin_request_item(String requestId, String senderLocationLatitude, String senderLocationLongitude, String receiverLocationLatitude, String receiverLocationLongitude, String receiverName, String requestDescription, String clientUserName, String clientFullName, String clientDateRequested, String clientPackageImage, String requestAssignedCourierId, String requestAssignedCourierUserName, String requestAssignedCourierFullName, String requestFinish) {
+    public admin_request_item(String requestId, String senderLocationLatitude, String senderLocationLongitude, String receiverLocationLatitude, String receiverLocationLongitude, String receiverName, String requestDescription, String clientUserName, String clientFullName, String clientDateRequested, String clientPackageImage, String requestAssignedCourierId, String requestAssignedCourierUserName, String requestAssignedCourierFullName, String requestFinish, String receiverContactNumber, String requestBill, String requestChange, String requestCash) {
         this.requestId = requestId;
         this.senderLocationLatitude = senderLocationLatitude;
         this.senderLocationLongitude = senderLocationLongitude;
@@ -37,6 +41,10 @@ public class admin_request_item {
         this.requestAssignedCourierUserName = requestAssignedCourierUserName;
         this.requestAssignedCourierFullName = requestAssignedCourierFullName;
         this.requestFinish = requestFinish;
+        this.receiverContactNumber = receiverContactNumber;
+        this.requestBill = requestBill;
+        this.requestChange = requestChange;
+        this.requestCash = requestCash;
     }
 
     public String getRequestId() {
@@ -157,5 +165,37 @@ public class admin_request_item {
 
     public void setRequestFinish(String requestFinish) {
         this.requestFinish = requestFinish;
+    }
+
+    public String getReceiverContactNumber() {
+        return receiverContactNumber;
+    }
+
+    public void setReceiverContactNumber(String receiverContactNumber) {
+        this.receiverContactNumber = receiverContactNumber;
+    }
+
+    public String getRequestBill() {
+        return requestBill;
+    }
+
+    public void setRequestBill(String requestBill) {
+        this.requestBill = requestBill;
+    }
+
+    public String getRequestChange() {
+        return requestChange;
+    }
+
+    public void setRequestChange(String requestChange) {
+        this.requestChange = requestChange;
+    }
+
+    public String getRequestCash() {
+        return requestCash;
+    }
+
+    public void setRequestCash(String requestCash) {
+        this.requestCash = requestCash;
     }
 }
