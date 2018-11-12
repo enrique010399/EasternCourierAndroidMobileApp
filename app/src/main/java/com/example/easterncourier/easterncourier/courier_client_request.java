@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class courier_client_request extends AppCompatActivity implements Adapter_courier_client_request.OnItemClickListener{
     ArrayList<admin_request_item> list ;
+    ArrayList<admin_request_item> list1;
     DatabaseReference reference;
     RecyclerView recyclerView;
     String courierId;
@@ -58,8 +59,16 @@ public class courier_client_request extends AppCompatActivity implements Adapter
                     if (dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierUserName().equals(getIntent().getExtras().getString("Courier UserName"))){
                         admin_request_item admin_request_item1= dataSnapshot1.getValue(admin_request_item.class);
                         courierId=dataSnapshot1.getValue(admin_request_item.class).getRequestAssignedCourierId().toString();
-                        if (!admin_request_item1.getRequestFinish().equals("Finished")){
-                            list.add(admin_request_item1);
+
+                        if (getIntent().getExtras().getString("requestForFinished").equals("No")){
+                            if (!admin_request_item1.getRequestFinish().equals("Finished")){
+                                list.add(admin_request_item1);
+                            }
+                        }
+                        else if (getIntent().getExtras().getString("requestForFinished").equals("Yes")){
+                            if (!admin_request_item1.getRequestFinish().equals("Not Yet")){
+                                list.add(admin_request_item1);
+                            }
                         }
 
                     }
@@ -68,6 +77,18 @@ public class courier_client_request extends AppCompatActivity implements Adapter
                 adapter_courier_client_request=new Adapter_courier_client_request(courier_client_request.this,list);
                 recyclerView.setAdapter(adapter_courier_client_request);
                 adapter_courier_client_request.setOnItemClickListener(courier_client_request.this);
+
+                /*if (getIntent().getExtras().getString("requestForFinished").equals("Yes")){
+                    adapter_courier_client_request=new Adapter_courier_client_request(courier_client_request.this,list1);
+                    recyclerView.setAdapter(adapter_courier_client_request);
+                    adapter_courier_client_request.setOnItemClickListener(courier_client_request.this);
+                }
+
+                else if (getIntent().getExtras().getString("requestForFinished").equals("No")){
+                    adapter_courier_client_request=new Adapter_courier_client_request(courier_client_request.this,list);
+                    recyclerView.setAdapter(adapter_courier_client_request);
+                    adapter_courier_client_request.setOnItemClickListener(courier_client_request.this);
+                }*/
 
 
             }

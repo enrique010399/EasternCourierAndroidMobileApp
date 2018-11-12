@@ -54,6 +54,7 @@ public class admin_requests extends AppCompatActivity implements Adapter_admin_r
 
                 for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
                     admin_request_item admin_request_item1= dataSnapshot1.getValue(admin_request_item.class);
+
                     if (!admin_request_item1.getRequestFinish().equals("Finished")){
                         list.add(admin_request_item1);
                     }

@@ -65,10 +65,18 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/def_photo" />
 
+            <Button
+                android:id="@+id/viewPreviousClientsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Previous Clients" />
+
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/userFullNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -118,6 +126,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/userAddressTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pitpitan,Bulakan,Bulacan"
@@ -150,6 +159,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/userContactNumberTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="+639554418568"
@@ -181,6 +191,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/userBirthDateTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="January 03 1999"
@@ -213,6 +224,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/userGender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Male"

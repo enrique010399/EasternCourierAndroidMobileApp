@@ -15,6 +15,17 @@ public class Adapter_admin_couriers extends RecyclerView.Adapter<Adapter_admin_c
     Context mContextAdminCourier;
     List<admin_couriers_item> mDataAdminCourier;
 
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener=listener;
+    }
+
     public Adapter_admin_couriers(Context mContextAdminCourier, List<admin_couriers_item> mDataAdminCourier) {
         this.mContextAdminCourier = mContextAdminCourier;
         this.mDataAdminCourier = mDataAdminCourier;
@@ -23,16 +34,14 @@ public class Adapter_admin_couriers extends RecyclerView.Adapter<Adapter_admin_c
     @NonNull
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater=LayoutInflater.from(mContextAdminCourier);
-        View v=inflater.inflate(R.layout.admin_couriers,parent,false);
-        return new myViewHolder(v);
+        return new myViewHolder(LayoutInflater.from(mContextAdminCourier).inflate(R.layout.card_admin_couriers,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        holder.courierPicture.setImageResource(mDataAdminCourier.get(position).getCourierPicture());
-        holder.courierName.setText(mDataAdminCourier.get(position).getCourierName());
-        holder.numOfDesignatedClients.setText(mDataAdminCourier.get(position).getNumOfDesignatedClients());
+        //holder.courierPicture.setImageResource(mDataAdminCourier.get(position).getCourierPicture());
+        holder.courierFullName.setText(mDataAdminCourier.get(position).getCourierFirstName()+" "+mDataAdminCourier.get(position).getCourierLastName());
+        holder.courierAddress.setText(mDataAdminCourier.get(position).getCourierAddress());
     }
 
     @Override
@@ -42,13 +51,26 @@ public class Adapter_admin_couriers extends RecyclerView.Adapter<Adapter_admin_c
 
 
     public class myViewHolder extends RecyclerView.ViewHolder{
-        ImageView courierPicture;
-        TextView courierName,numOfDesignatedClients;
+        ImageView courierImage;
+        TextView courierFullName,courierAddress;
         public myViewHolder(View itemView) {
             super(itemView);
-            courierPicture=itemView.findViewById(R.id.courierPicture);
-            courierName=itemView.findViewById(R.id.courierName);
-            numOfDesignatedClients=itemView.findViewById(R.id.numOfDesignatedClients);
+            courierImage=itemView.findViewById(R.id.courierImage);
+            courierFullName=itemView.findViewById(R.id.courierFullName);
+            courierAddress=itemView.findViewById(R.id.courierAddress);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null){
+                        int position= getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
